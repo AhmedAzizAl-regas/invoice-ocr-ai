@@ -129,6 +129,7 @@ class SettingsPage extends ConsumerWidget {
               title: Text(
                 isAr ? 'مشاركة عبر التطبيقات' : 'Share via App Picker',
               ),
+              // تعليق 7: استخدام مكتبة share_plus لمشاركة ملف القاعدة عبر التطبيقات.
               subtitle: Text(
                 isAr
                     ? 'مشاركة ملف .db إلى أي تطبيق آخر'
