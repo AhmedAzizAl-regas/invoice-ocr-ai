@@ -60,6 +60,7 @@ class SettingsPage extends ConsumerWidget {
       try {
         return await _getBackupDirectory().timeout(timeout);
       } catch (_) {
+        // تعليق 5: هذه الدالة تحمي من تجمد واجهة المستخدم عند فشل قنوات المنصة.
         try {
           final docs = await getApplicationDocumentsDirectory();
           final fallback = Directory(p.join(docs.path, 'Backups'));
