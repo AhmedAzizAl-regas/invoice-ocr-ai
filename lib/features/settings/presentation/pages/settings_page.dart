@@ -45,6 +45,7 @@ class SettingsPage extends ConsumerWidget {
       }
       return targetDir;
     } catch (e) {
+      // تعليق 4: إذا فشل الحصول على المسار نعود إلى مجلد المستندات كتّحفّظ افتراضي.
       // Fallback to application documents directory in case of any permission or IO errors.
       final docs = await getApplicationDocumentsDirectory();
       final fallback = Directory(p.join(docs.path, 'Backups'));
