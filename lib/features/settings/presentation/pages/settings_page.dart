@@ -81,6 +81,8 @@ class SettingsPage extends ConsumerWidget {
     final dbPath = p.join(dbDir.path, 'invoice_ocr_ai.db');
     final dbFile = File(dbPath);
 
+    // تعليق 6: دالة تصدير النسخة الاحتياطية تعرض خيار المشاركة أو الحفظ بالمجلد الافتراضي.
+
     if (!await dbFile.exists()) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
