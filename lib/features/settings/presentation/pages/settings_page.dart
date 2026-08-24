@@ -20,6 +20,7 @@ import 'package:invoice_ocr_ai/features/history/presentation/providers/history_p
 
 // تعليق 1: هذا الملف يحتوي على واجهة إعدادات التطبيق وإدارة النسخ الاحتياطية.
 class SettingsPage extends ConsumerWidget {
+  // تعليق 2: دالة _getBackupDirectory تحاول تحديد مجلد النسخ الاحتياطي المناسب على الجهاز.
   const SettingsPage({super.key});
 
   /// Returns Google Play compliant backup folder path (e.g. Download/Invoice_OCR_Backups or Documents/Backups).
