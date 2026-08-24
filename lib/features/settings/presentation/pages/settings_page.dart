@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:cross_file/cross_file.dart';
 
 import 'package:invoice_ocr_ai/core/config/app_config.dart';
 import 'package:invoice_ocr_ai/core/database/database_helper.dart';
@@ -17,28 +18,61 @@ import 'package:invoice_ocr_ai/features/invoice/data/models/currency_model.dart'
 import 'package:invoice_ocr_ai/features/home/presentation/providers/home_provider.dart';
 import 'package:invoice_ocr_ai/features/history/presentation/providers/history_provider.dart';
 
+// تعليق 1: هذا الملف يحتوي على واجهة إعدادات التطبيق وإدارة النسخ الاحتياطية.
 class SettingsPage extends ConsumerWidget {
+  // تعليق 2: دالة _getBackupDirectory تحاول تحديد مجلد النسخ الاحتياطي المناسب على الجهاز.
   const SettingsPage({super.key});
 
   /// Returns Google Play compliant backup folder path (e.g. Download/Invoice_OCR_Backups or Documents/Backups).
   Future<Directory> _getBackupDirectory() async {
-    Directory targetDir;
-    if (Platform.isAndroid) {
-      final downloadsDir = Directory('/storage/emulated/0/Download');
-      if (await downloadsDir.exists()) {
-        targetDir = Directory(p.join(downloadsDir.path, 'Invoice_OCR_Backups'));
+    try {
+      // تعليق 3: إذا كان الجهاز أندرويد نحاول استخدام مجلد التنزيلات العام أولاً.
+      Directory targetDir;
+      if (Platform.isAndroid) {
+        final downloadsDir = Directory('/storage/emulated/0/Download');
+        if (await downloadsDir.exists()) {
+          targetDir = Directory(p.join(downloadsDir.path, 'Invoice_OCR_Backups'));
+        } else {
+          final docs = await getApplicationDocumentsDirectory();
+          targetDir = Directory(p.join(docs.path, 'Backups'));
+        }
       } else {
         final docs = await getApplicationDocumentsDirectory();
         targetDir = Directory(p.join(docs.path, 'Backups'));
       }
-    } else {
+      if (!await targetDir.exists()) {
+        await targetDir.create(recursive: true);
+      }
+      return targetDir;
+    } catch (e) {
+      // تعليق 4: إذا فشل الحصول على المسار نعود إلى مجلد المستندات كتّحفّظ افتراضي.
+      // Fallback to application documents directory in case of any permission or IO errors.
       final docs = await getApplicationDocumentsDirectory();
-      targetDir = Directory(p.join(docs.path, 'Backups'));
+      final fallback = Directory(p.join(docs.path, 'Backups'));
+      if (!await fallback.exists()) {
+        await fallback.create(recursive: true);
+      }
+      return fallback;
     }
-    if (!await targetDir.exists()) {
-      await targetDir.create(recursive: true);
+
+    /// Safe wrapper with timeout to avoid UI hanging when platform channel fails.
+    Future<Directory?> _fetchBackupDirectorySafe({Duration timeout = const Duration(seconds: 5)}) async {
+      try {
+        return await _getBackupDirectory().timeout(timeout);
+      } catch (_) {
+        // تعليق 5: هذه الدالة تحمي من تجمد واجهة المستخدم عند فشل قنوات المنصة.
+        try {
+          final docs = await getApplicationDocumentsDirectory();
+          final fallback = Directory(p.join(docs.path, 'Backups'));
+          if (!await fallback.exists()) {
+            await fallback.create(recursive: true);
+          }
+          return fallback;
+        } catch (_) {
+          return null;
+        }
+      }
     }
-    return targetDir;
   }
 
   /// Opens options sheet for Exporting Database Backup (Share or Save to Storage).
@@ -46,6 +80,8 @@ class SettingsPage extends ConsumerWidget {
     final dbDir = await getApplicationDocumentsDirectory();
     final dbPath = p.join(dbDir.path, 'invoice_ocr_ai.db');
     final dbFile = File(dbPath);
+
+    // تعليق 6: دالة تصدير النسخة الاحتياطية تعرض خيار المشاركة أو الحفظ بالمجلد الافتراضي.
 
     if (!await dbFile.exists()) {
       if (context.mounted) {
@@ -93,6 +129,7 @@ class SettingsPage extends ConsumerWidget {
               title: Text(
                 isAr ? 'مشاركة عبر التطبيقات' : 'Share via App Picker',
               ),
+              // تعليق 7: استخدام مكتبة share_plus لمشاركة ملف القاعدة عبر التطبيقات.
               subtitle: Text(
                 isAr
                     ? 'مشاركة ملف .db إلى أي تطبيق آخر'
@@ -117,6 +154,7 @@ class SettingsPage extends ConsumerWidget {
                     ? 'حفظ مباشرة في ذاكرة الهاتف'
                     : 'Save directly to Phone Storage',
               ),
+              // تعليق 8: عند الحفظ ننسخ الملف مع طابع زمني ونحدث ملف النسخة الافتراضية أيضًا.
               subtitle: Text(
                 isAr
                     ? 'نسخ الملف إلى مجلد التحميلات/المستندات'
@@ -257,6 +295,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
               ] else ...[
+                // تعليق 9: عند عرض ملفات النسخ الاحتياطية نرتبها بحسب تاريخ التعديل الأحدث أولاً.
                 Text(
                   isAr
                       ? 'اختر ملف نسخة احتياطية للاسترجاع:'
@@ -315,6 +354,7 @@ class SettingsPage extends ConsumerWidget {
     bool isAr,
     File backupFile,
   ) {
+    // تعليق 10: عند التأكيد نغلق الاتصال الحالي ثم نستبدل ملف القاعدة بالنسخة المختارة.
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -343,6 +383,7 @@ class SettingsPage extends ConsumerWidget {
               }
 
               try {
+                // تعليق 11: بعد الاستبدال نعيد تهيئة الـ DatabaseHelper ونحمل الإعدادات والبيانات من جديد.
                 final dbHelper = GetIt.I<DatabaseHelper>();
                 dbHelper.close();
 
@@ -916,12 +957,58 @@ class SettingsPage extends ConsumerWidget {
               ),
 
               // Default Backup Location Card
-              FutureBuilder<Directory>(
-                future: _getBackupDirectory(),
+              FutureBuilder<Directory?>(
+                future: _fetchBackupDirectorySafe(),
                 builder: (context, snapshot) {
-                  final path =
-                      snapshot.data?.path ??
-                      (isAr ? 'جاري التحميل...' : 'Loading...');
+                  Widget subtitleWidget;
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    subtitleWidget = Row(
+                      children: [
+                        Text(isAr ? 'جاري التحميل...' : 'Loading...'),
+                        const SizedBox(width: 8),
+                        const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    subtitleWidget = Text(
+                      isAr ? 'خطأ في الحصول على المسار' : 'Error retrieving path',
+                      style: const TextStyle(fontSize: 11, color: Colors.red),
+                    );
+                  } else if (snapshot.hasData && snapshot.data != null) {
+                    final path = snapshot.data!.path;
+                    subtitleWidget = Text(
+                      path,
+                      style: const TextStyle(fontSize: 11),
+                    );
+                  } else if (snapshot.hasError || snapshot.data == null) {
+                    subtitleWidget = Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          isAr ? 'غير متوفر' : 'Unavailable',
+                          style: const TextStyle(fontSize: 11, color: Colors.red),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.refresh),
+                          onPressed: () {
+                            // Trigger rebuild to retry
+                            (context as Element).markNeedsBuild();
+                          },
+                        )
+                      ],
+                    );
+                  } else {
+                    final path = isAr ? 'غير متوفر' : 'Unavailable';
+                    subtitleWidget = Text(
+                      path,
+                      style: const TextStyle(fontSize: 11),
+                    );
+                  }
+
                   return Card(
                     child: ListTile(
                       leading: const Icon(
@@ -933,10 +1020,7 @@ class SettingsPage extends ConsumerWidget {
                             ? 'مسار النسخ الاحتياطي في الهاتف'
                             : 'Default Device Backup Directory',
                       ),
-                      subtitle: Text(
-                        path,
-                        style: const TextStyle(fontSize: 11),
-                      ),
+                      subtitle: subtitleWidget,
                     ),
                   );
                 },
@@ -955,7 +1039,7 @@ class SettingsPage extends ConsumerWidget {
                         : 'Share or save database backup to storage',
                   ),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showExportDatabaseSheet(context, isAr),
+                  onTap: () async => await _showExportDatabaseSheet(context, isAr),
                 ),
               ),
 
@@ -975,7 +1059,7 @@ class SettingsPage extends ConsumerWidget {
                         : 'Restore data from a saved backup file',
                   ),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showImportDatabaseSheet(context, ref, isAr),
+                  onTap: () async => await _showImportDatabaseSheet(context, ref, isAr),
                 ),
               ),
 
