@@ -383,6 +383,7 @@ class SettingsPage extends ConsumerWidget {
               }
 
               try {
+                // تعليق 11: بعد الاستبدال نعيد تهيئة الـ DatabaseHelper ونحمل الإعدادات والبيانات من جديد.
                 final dbHelper = GetIt.I<DatabaseHelper>();
                 dbHelper.close();
 
