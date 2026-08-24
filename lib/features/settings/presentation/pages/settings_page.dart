@@ -354,6 +354,7 @@ class SettingsPage extends ConsumerWidget {
     bool isAr,
     File backupFile,
   ) {
+    // تعليق 10: عند التأكيد نغلق الاتصال الحالي ثم نستبدل ملف القاعدة بالنسخة المختارة.
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
