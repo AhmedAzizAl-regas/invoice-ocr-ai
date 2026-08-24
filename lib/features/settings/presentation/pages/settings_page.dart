@@ -18,6 +18,7 @@ import 'package:invoice_ocr_ai/features/invoice/data/models/currency_model.dart'
 import 'package:invoice_ocr_ai/features/home/presentation/providers/home_provider.dart';
 import 'package:invoice_ocr_ai/features/history/presentation/providers/history_provider.dart';
 
+// تعليق 1: هذا الملف يحتوي على واجهة إعدادات التطبيق وإدارة النسخ الاحتياطية.
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
