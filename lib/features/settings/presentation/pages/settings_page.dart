@@ -26,6 +26,7 @@ class SettingsPage extends ConsumerWidget {
   /// Returns Google Play compliant backup folder path (e.g. Download/Invoice_OCR_Backups or Documents/Backups).
   Future<Directory> _getBackupDirectory() async {
     try {
+      // تعليق 3: إذا كان الجهاز أندرويد نحاول استخدام مجلد التنزيلات العام أولاً.
       Directory targetDir;
       if (Platform.isAndroid) {
         final downloadsDir = Directory('/storage/emulated/0/Download');
