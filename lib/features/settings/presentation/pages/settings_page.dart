@@ -154,6 +154,7 @@ class SettingsPage extends ConsumerWidget {
                     ? 'حفظ مباشرة في ذاكرة الهاتف'
                     : 'Save directly to Phone Storage',
               ),
+              // تعليق 8: عند الحفظ ننسخ الملف مع طابع زمني ونحدث ملف النسخة الافتراضية أيضًا.
               subtitle: Text(
                 isAr
                     ? 'نسخ الملف إلى مجلد التحميلات/المستندات'
