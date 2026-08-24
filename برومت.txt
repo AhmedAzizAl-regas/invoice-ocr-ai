@@ -1,0 +1,423 @@
+برومبت إنشاء مشروع Flutter احترافي
+أنت مهندس برمجيات Flutter Senior وخبير في Clean Architecture وOCR والذكاء الاصطناعي.
+أريد إنشاء تطبيق Flutter احترافي للإنتاج (Production Ready) وليس مجرد مثال تعليمي.
+اسم المشروع
+Invoice OCR AI
+اسم الحزمة
+com.silkroadminingco.invoice_ocr_ai
+فكرة التطبيق
+يقوم المستخدم بتصوير أي فاتورة أو اختيارها من المعرض.
+يقوم التطبيق تلقائياً بتحسين الصورة ثم استخراج النص منها ثم تحليلها وتحويلها إلى جدول احترافي.
+إذا كانت النتيجة المحلية غير دقيقة ينتقل تلقائياً إلى OCR السحابي.
+إذا بقيت النتيجة غير دقيقة يتم إرسال النص المستخرج فقط إلى نموذج ذكاء اصطناعي لتحويله إلى بيانات منظمة.
+بعد ذلك يستطيع المستخدم مراجعة البيانات وتعديلها ثم تصديرها إلى:
+• Excel (.xlsx)
+• CSV (.csv)
+• Word (.docx)
+• PDF
+كما يتم حفظ جميع الفواتير في قاعدة البيانات.
+ترتيب مراحل المعالجة
+1- اختيار صورة أو التقاطها بالكاميرا.
+2- معالجة الصورة باستخدام OpenCV.
+• إزالة الضوضاء.
+• تصحيح الميل.
+• إزالة الظلال.
+• تحسين التباين.
+• قص الفاتورة تلقائياً.
+• تحسين جودة الصورة.
+3- تشغيل Google ML Kit OCR.
+إذا كانت الدقة ممتازة يتم المتابعة.
+إذا لم تكن كذلك ينتقل إلى:
+4- Tesseract OCR
+إذا كانت النتيجة جيدة يتم المتابعة.
+إذا لم تكن جيدة وكان يوجد اتصال بالإنترنت ينتقل إلى:
+5- Google Vision OCR
+إذا لم تكن النتيجة جيدة ينتقل إلى:
+إذا بقيت النتيجة ضعيفة يتم إرسال النص فقط إلى:
+6- OpenAI أو Gemini
+ويطلب منه إعادة البيانات بصيغة JSON منظمة.
+تحليل الفاتورة
+استخرج تلقائياً:
+اسم المتجر
+الشعار إن وجد
+رقم الفاتورة
+التاريخ
+الوقت
+العملة
+الضريبة
+الخصم
+الإجمالي قبل الضريبة
+الإجمالي النهائي
+طريقة الدفع
+جميع المنتجات
+الكمية
+سعر الوحدة
+الإجمالي لكل منتج
+قاعدة البيانات
+استخدم SQLite3.
+أنشئ Repository Pattern.
+استخدم DAO.
+أنشئ Migration.
+اجعل قاعدة البيانات قابلة للتطوير.
+الجداول:
+settings
+invoices
+invoice_items
+currencies
+ocr_logs
+export_logs
+recent_files
+Architecture
+استخدم Feature-first Folder Structure.
+واستخدم Clean Architecture.
+lib/
+core/
+config/
+constants/
+theme/
+router/
+database/
+network/
+storage/
+utils/
+services/
+widgets/
+features/
+settings/
+home/
+scanner/
+ocr/
+invoice/
+history/
+export/
+shared/
+داخل كل Feature يوجد
+data/
+domain/
+presentation/
+State Management
+Riverpod
+Dependency Injection
+GetIt
+Routing
+GoRouter
+Local Storage
+SQLite3
+SharedPreferences
+Localization
+يدعم
+العربية
+English
+RTL
+LTR
+التبديل أثناء تشغيل التطبيق.
+التاريخ
+دعم:
+التاريخ الميلادي فقط.
+التاريخ الهجري فقط.
+الميلادي والهجري معاً.
+الوقت
+دعم:
+24 ساعة.
+12 ساعة.
+AM PM.
+ص / م.
+Theme
+الوضع الفاتح.
+الوضع الداكن.
+الوضع حسب النظام.
+أنشئ ملفاً واحداً فقط يحتوي على:
+Colors
+Text Styles
+Button Styles
+Card Styles
+Input Styles
+Icon Styles
+Border Radius
+Spacing
+Shadow
+AppBar Theme
+NavigationBar Theme
+Dialog Theme
+SnackBar Theme
+BottomSheet Theme
+FloatingActionButton Theme
+Chip Theme
+DataTable Theme
+بحيث يتم استدعاؤها من جميع صفحات النظام.
+Settings
+صفحة إعدادات احترافية تحتوي على:
+تغيير اللغة.
+الوضع الليلي.
+الوضع حسب النظام.
+اختيار لون التطبيق.
+اختيار نوع الخط.
+تكبير الخط.
+اختيار صيغة التاريخ.
+اختيار صيغة الوقت.
+اختيار العملة.
+نسخ احتياطي.
+استعادة النسخة الاحتياطية.
+تصدير قاعدة البيانات.
+حذف جميع البيانات.
+حول التطبيق.
+سياسة الخصوصية.
+التواصل.
+Home
+إحصائيات.
+عدد الفواتير.
+آخر الفواتير.
+آخر عمليات التصدير.
+زر التقاط فاتورة.
+زر اختيار صورة.
+History
+عرض جميع الفواتير.
+البحث.
+الفلترة.
+الترتيب.
+تعديل.
+حذف.
+إعادة التصدير.
+Export
+Excel
+CSV
+Word
+PDF
+Share
+Print
+OCR
+عرض النص الخام.
+عرض نسبة الثقة.
+عرض المحرك المستخدم.
+إعادة التحليل.
+الذكاء الاصطناعي
+إذا كانت نسبة الثقة أقل من قيمة محددة:
+يرسل النص فقط.
+ولا يرسل الصورة.
+ويستقبل JSON.
+ثم يحوله إلى نموذج Invoice.
+Design
+Material 3.
+Responsive.
+Animations.
+Shimmer Loading.
+Skeleton.
+Modern UI.
+بدون أي أكواد مكررة.
+اتبع SOLID.
+اتبع DRY.
+اتبع Clean Code.
+استخدم التعليقات الإنجليزية فقط.
+استخدم أسماء ملفات وClasses احترافية.
+قسم المشروع إلى Features مستقلة.
+لا تكتب أي كود تجريبي أو Placeholder.
+اجعل المشروع Production Ready وقابلًا للتوسع مستقبلًا.
+
+# Responsive Design
+
+يجب أن يكون التطبيق Responsive بالكامل.
+
+يدعم:
+
+- Android Phones
+- Android Tablets
+- iPhone
+- iPad
+- Foldable Devices
+
+عدم استخدام أحجام ثابتة نهائياً.
+
+استخدام:
+- MediaQuery
+- LayoutBuilder
+- OrientationBuilder
+- Expanded
+- Flexible
+- Wrap
+- FractionallySizedBox
+
+واستخدام نقاط توقف (Breakpoints):
+
+Mobile
+0 - 599
+
+Tablet
+600 - 1023
+
+Desktop
+1024+
+
+ويجب أن تعمل جميع الشاشات في:
+
+Portrait
+
+Landscape
+
+بدون Overflow أو RenderFlex Errors.
+
+ويكون حجم الخط والأيقونات والمسافات متجاوباً تلقائياً حسب حجم الشاشة.
+
+# App Branding & Color System
+
+اسم التطبيق:
+
+Invoice OCR AI
+
+# Logo
+
+أنشئ نظام شعار للتطبيق.
+
+الشعار يجب أن يعبر عن:
+
+- فاتورة.
+- مسح ضوئي.
+- ذكاء اصطناعي.
+- تحويل الملفات.
+
+يدعم:
+
+- Logo كامل.
+- Icon للتطبيق.
+- Splash Screen.
+- App Icon Android.
+- App Icon iOS.
+
+يتم وضع جميع معلومات الهوية البصرية داخل:
+
+core/config/app_branding.dart
+
+# Color Palette
+
+استخدم فقط هذه الألوان الأساسية:
+
+Primary Colors:
+
+Yellow:
+اللون الرئيسي للتطبيق.
+
+Red:
+لون التنبيهات والعناصر المهمة.
+
+White:
+للوضع الفاتح والخلفيات.
+
+Black:
+للوضع الداكن والخلفيات.
+
+لا تستخدم ألوان إضافية إلا درجات مشتقة من هذه الألوان.
+
+# Light Theme
+
+الخلفية:
+
+White
+
+النصوص:
+
+Black
+
+الأزرار الرئيسية:
+
+Yellow
+
+الأزرار الثانوية:
+
+Red
+
+Cards:
+
+White مع ظل خفيف.
+
+Icons:
+
+Black أو Red حسب الحالة.
+
+# Dark Theme
+
+الخلفية:
+
+Black
+
+النصوص:
+
+White
+
+الأزرار الرئيسية:
+
+Yellow
+
+العناصر المهمة:
+
+Red
+
+Cards:
+
+درجة داكنة من Black.
+
+Icons:
+
+White أو Yellow.
+
+# Theme Architecture
+
+لا تكتب الألوان داخل الصفحات.
+
+أنشئ ملف واحد فقط:
+
+core/theme/app_colors.dart
+
+يحتوي:
+
+AppColors
+
+LightColors
+
+DarkColors
+
+ويتم استخدامه في كامل التطبيق.
+
+أنشئ:
+
+app_theme.dart
+
+يحتوي:
+
+Light Theme
+
+Dark Theme
+
+ويدعم:
+
+ThemeMode.system
+
+ThemeMode.light
+
+ThemeMode.dark
+
+# Typography
+
+أنشئ ملف:
+
+app_text_styles.dart
+
+يدعم:
+
+Arabic Fonts
+
+English Fonts
+
+خطوط واضحة للتطبيقات المالية.
+
+دعم تغيير حجم الخط من الإعدادات.
+
+# Accessibility
+
+يجب مراعاة:
+
+وضوح التباين بين النص والخلفية.
+
+سهولة القراءة.
+
+دعم تكبير الخط.
+
+دعم المستخدمين ذوي الاحتياجات الخاصة.ن ذوي الاحتياجات الخاصة.

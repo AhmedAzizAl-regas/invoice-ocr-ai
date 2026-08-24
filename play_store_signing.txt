@@ -1,0 +1,57 @@
+========================================================================
+GOOGLE PLAY STORE SIGNING & GOOGLE CLOUD VISION API KEY RESTRICTION
+========================================================================
+
+1. APPLICATION DETAILS
+------------------------------------------------------------------------
+* App Name:      Invoice OCR AI
+* Package Name:  com.silkroadminingco.invoice_ocr_ai
+
+
+2. YOUR EXTRACTED DEBUG SIGNING KEYS (GENERATED SUCCESSFULLY)
+------------------------------------------------------------------------
+* Debug SHA-1:
+  14:89:BA:67:29:6B:7E:AD:13:A1:E2:D6:7C:A6:9E:62:0F:81:38:3C
+
+* Debug SHA-256:
+  75:00:4A:BD:09:7F:4D:C4:FE:6D:37:C5:C1:1C:CD:62:2D:D1:BF:C1:D9:FA:24:24:EB:92:28:87:9D:4C:8F:F2
+
+* Debug MD5:
+  91:11:A0:7E:E8:FE:B4:B6:CE:74:8A:1C:5C:72:63:50
+
+
+3. HOW TO GET SHA-1 FINGERPRINT ON WINDOWS
+------------------------------------------------------------------------
+
+Option A: Via Gradle (Easiest, runs inside Android Studio / terminal)
+1. Open terminal in the root directory of your Flutter project.
+2. Run this command:
+   cd android
+   .\gradlew signingReport
+3. Look at the output. It will show the SHA-1 and SHA-256 fingerprints for:
+   - debug (development)
+   - release (production, once configured)
+
+Option B: Via Java Keytool (Requires JDK / Java installed)
+* Debug Keystore:
+  Open PowerShell/CMD and execute:
+  keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android
+
+* Release Keystore (When you build your own keystore file):
+  keytool -list -v -keystore "PATH_TO_YOUR_RELEASE_KEYSTORE.jks" -alias "YOUR_ALIAS"
+
+
+4. HOW TO RESTRICT YOUR GOOGLE VISION OCR API KEY
+------------------------------------------------------------------------
+To prevent unauthorized use of your Google Cloud Vision API Key, restrict it to your Android App:
+1. Go to Google Cloud Console (https://console.cloud.google.com/).
+2. Select your project, navigate to "APIs & Services" > "Credentials".
+3. Edit your API Key.
+4. Under "Key restrictions" > "Application restrictions", choose "Android apps".
+5. Click "ADD AN ITEM".
+6. Enter:
+   - Package name: com.silkroadminingco.invoice_ocr_ai
+   - SHA-1 certificate fingerprint: 14:89:BA:67:29:6B:7E:AD:13:A1:E2:D6:7C:A6:9E:62:0F:81:38:3C
+7. Under "API restrictions", select "Restrict key" and check "Cloud Vision API".
+8. Click "Save".
+========================================================================

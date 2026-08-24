@@ -1,0 +1,49 @@
+# Task Checklist - Invoice OCR AI Implementation
+
+- [x] 1. Add dependencies to `pubspec.yaml` and run `flutter pub get`
+- [x] 2. Core App Branding, Configurations, and Utilities
+  - [x] App Branding (`core/config/app_branding.dart`)
+  - [x] App Config (`core/config/app_config.dart`)
+  - [x] Shared Preferences (`core/storage/shared_prefs.dart`)
+  - [x] Date Formatter (Gregorian/Hijri) (`core/utils/date_formatter.dart`)
+- [x] 3. Design System & Theme
+  - [x] Colors (`core/theme/app_colors.dart`)
+  - [x] Text Styles (`core/theme/app_text_styles.dart`)
+  - [x] Core App Theme (`core/theme/app_theme.dart`)
+- [x] 4. SQLite3 Database & Migration Layer
+  - [x] Database Migrations (`core/database/migrations.dart`)
+  - [x] Database Helper (`core/database/database_helper.dart`)
+- [x] 5. Core Services
+  - [x] API Client (`core/network/api_client.dart`)
+  - [x] Image Preprocessor Service (`core/services/image_processor_service.dart`)
+  - [x] LLM Parse Service (`core/services/llm_service.dart`)
+  - [x] OCR Engine Pipeline Service (`core/services/ocr_service.dart`)
+  - [x] Multi-format Exporter Service (`core/services/export_service.dart`)
+- [x] 6. Routing & DI Injection
+  - [x] App Router Routing configurations (`core/router/app_router.dart`)
+  - [x] Main Entry Setup with DI & Riverpod (`lib/main.dart`)
+- [x] 7. Feature Pages & Business Logic
+  - [x] Settings Feature (`features/settings/`)
+  - [x] Home Feature (`features/home/`)
+  - [x] Scanner Feature (`features/scanner/`)
+  - [x] OCR Feature (`features/ocr/`)
+  - [x] Invoice Feature (`features/invoice/`)
+  - [x] History Feature (`features/history/`)
+- [x] 8. Compilation & Verification
+  - [x] Verification of code completeness
+  - [x] Compile and verify formatting & builds
+
+- [x] 9. Dynamic Currency & Exchange Rate Management
+  - [x] Database migrations upgrade and currencies pre-population (`core/database/migrations.dart`, `core/database/database_helper.dart`)
+  - [x] Create CurrencyModel (`features/invoice/data/models/currency_model.dart`)
+  - [x] Modify Local Source, Repository, and Implementations (`invoice_local_source.dart`, `invoice_repository.dart`, `invoice_repository_impl.dart`)
+  - [x] SettingsProvider updates for dynamic currency operations (`settings_provider.dart`)
+  - [x] SettingsPage updates with Dropdowns & Add Currency bottom sheet (`settings_page.dart`)
+  - [x] Detail Page and Home Page stats conversions integration (`invoice_detail_page.dart`, `home_page.dart`, `history_page.dart`)
+  - [x] Run verification tests and build checking
+  - [x] 9b. Dynamic Base Currency, Custom Editing, and Deletion
+    - [x] Update Repository & Local Source with dynamic base currency parameter (`invoice_local_source.dart`, `invoice_repository.dart`)
+    - [x] Update Currencies Provider with delete/edit methods (`currencies_provider.dart`)
+    - [x] Update Home Provider dashboard fetcher (`home_provider.dart`)
+    - [x] Implement Settings Currency list view with Edit and Delete dialogs (`settings_page.dart`)
+    - [x] Run verification tests and build checking
